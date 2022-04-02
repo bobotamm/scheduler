@@ -1,11 +1,14 @@
 import { hasConflict, getCourseTerm, terms } from '/Users/wingshantam/Downloads/cs394/scheduler/src/utilities/times.js';
 import {setData} from '/Users/wingshantam/Downloads/cs394/scheduler/src/utilities/firebase.js';
+import {useUserState} from '/Users/wingshantam/Downloads/cs394/scheduler/src/utilities/firebase.js';
+
 
 // on-click: select course by clicking 
 // style: change color if selected
 const Course = ({ course, selected, setSelected }) => {
   const isSelected = selected.includes(course);
   const isDisabled = !isSelected && hasConflict(course, selected);
+  const [user] = useUserState();
   const style = {
     backgroundColor: isDisabled? 'lightgrey' : isSelected ? 'lightgreen' : 'white'
   };

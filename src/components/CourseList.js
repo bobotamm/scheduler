@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { hasConflict, getCourseTerm, terms } from '/Users/wingshantam/Downloads/cs394/scheduler/src/utilities/times.js';
 import Course from './Course.js';
+import {signInWithGoogle, signOut, useUserState} from '/Users/wingshantam/Downloads/cs394/scheduler/src/utilities/firebase.js';
 
 const CourseList = ({ courses }) => {
   const [term, setTerm] = useState('Fall');
@@ -32,15 +33,35 @@ const scheduleChanged = (selected, courses) => (
 );
 
 
-const TermSelector = ({ term, setTerm }) => (
-  <div className="btn-group">
-    {
-      Object.values(terms).map(value => (
-        <TermButton key={value} term={value} setTerm={setTerm} checked={value === term} />
-      ))
-    }
-  </div>
+const SignInButton = () => (
+  <button className="btn btn-secondary btn-sm"
+      onClick={() => signInWithGoogle()}>
+    Sign In
+  </button>
 );
+
+const SignOutButton = () => (
+  <button className="btn btn-secondary btn-sm"
+      onClick={() => signOut()}>
+    Sign Out
+  </button>
+);
+
+const TermSelector = ({term, setTerm}) => {
+  const [user] = useUserState();
+  return (
+    <div className="btn-toolbar justify-content-between">
+      <div className="btn-group">
+      { 
+        Object.values(terms).map(
+          value => <TermButton key={value} term={value} setTerm={setTerm} checked={value === term} />
+        )
+      }
+      </div>
+      { user ? <SignOutButton /> : <SignInButton /> }
+    </div>
+  );
+};
 
 const TermButton = ({ term, setTerm, checked }) => (
   <>
